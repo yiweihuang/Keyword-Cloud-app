@@ -1,0 +1,19 @@
+section
+  .container
+    .row
+      .col-lg-8.col-lg-offset-2.text-center
+        h2.section-heading 我的課程
+        hr.primary
+        p
+        .panel.panel-primary
+            .panel-heading 課程列表
+            .panel-body
+              table.table.table-striped.table-hover
+                thead
+                  tr
+                    th 課程名稱
+                tbody
+                  - @owned.each do |course|
+                    tr
+                      td
+                        a href="/accounts/#{@current_uid}/#{course[:cid]}" #{course[:coures_name]}

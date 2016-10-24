@@ -1,0 +1,31 @@
+section
+  .container
+    .row
+      .col-lg-8.col-lg-offset-2.text-center
+        h2.section-heading 
+          -if @ordered_folder[0][:folder_type] == "concepts"
+            | 關鍵字
+          -elsif @ordered_folder[0][:folder_type] == "slides"
+            | 講義
+          -elsif @ordered_folder[0][:folder_type] == "subtitles"
+            | 字幕
+        hr.primary
+        p
+        .panel.panel-primary
+          .panel-heading 章節列表
+          .panel-body
+            table.table.table-striped.table-hover
+              thead
+                tr
+                  th 章節順序
+                  th 章節名稱
+                  th 資料夾類型
+              tbody
+                - @ordered_folder.each do |chapter|
+                  tr
+                    td
+                      == chapter[:chapter_order]
+                    td
+                      a href="/accounts/#{@current_uid}/#{chapter[:course_id]}/#{chapter[:folder_type]}/#{chapter[:folder_id]}" #{chapter[:name]}
+                    td
+                      == chapter[:folder_type]

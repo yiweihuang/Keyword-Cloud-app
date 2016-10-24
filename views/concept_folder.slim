@@ -1,0 +1,77 @@
+section
+  .container
+    .row
+      .col-lg-8.col-lg-offset-2.text-center
+        h2.section-heading 
+          == "#{@folder[:folder_name]}"
+        hr.primary
+        p
+        .panel.panel-info
+          .panel-heading 檔案列表
+          .panel-body
+            table.table.table-striped.table-hover
+              thead
+                tr
+                  th 檔案名稱
+                  th 檔案狀態
+                  th 下載
+              tbody
+                - unless @folder[:files].empty?
+                  - @folder[:files].each do |f|
+                    tr
+                      td #{f[:filename]}
+                      td
+                        form#delete_data method='post' action='/accounts/#{@current_uid}/#{@folder[:course_id]}/#{@folder_type}/#{@folder[:folder_id]}/files/delete'
+                          input name="filename" style="display:none;" type="text" value="#{f[:filename]}" /
+                          button#delete_data.btn.btn-danger type='submit' 刪除
+                      td 
+                        a href="/accounts/#{@current_uid}/#{@folder[:course_id]}/#{@folder_type}/#{@folder[:folder_id]}/files/#{f[:file_id]}" 
+                          i.fa.fa-download aria-hidden="true"  Download
+                - else
+                  p 
+                    | 目前尚無檔案，請上傳檔案。
+            button.btn.btn-success data-toggle="modal" data-target="#newFileModal"
+              i.fa.fa-plus aria-hidden="true"  新增檔案
+            p
+            button.btn.btn-success data-toggle="modal" data-target="#newInputModal"
+              i.fa.fa-plus aria-hidden="true"  輸入關鍵字
+
+        div id="newFileModal" class="modal fade" role="dialog"
+          div class="modal-dialog"
+            div class="modal-content"
+              div class="modal-header"
+                h4 上傳檔案
+              div class="modal-body"
+                form role="form" action="/accounts/#{@current_uid}/#{@folder[:course_id]}/#{@folder_type}/#{@folder[:folder_id]}/files/" enctype="multipart/form-data" method="post" id='new-file-form'
+                  .form-group
+                    label for='file_input' 選擇檔案:
+                  .fileinput.fileinput-new.input-group data-provides="fileinput"
+                    .form-control data-trigger="fileinput"
+                      i.glyphicon.glyphicon-file.fileinput-exists
+                      span.fileinput-filename
+                    span.input-group-addon.btn.btn-default.btn-file
+                      span.fileinput-new 選擇檔案
+                      span.fileinput-exists 修改
+                      input name="fileToUpload" type="file" id="fileToUpload"
+                    a.input-group-addon.btn.btn-default.fileinput-exists data-dismiss="fileinput" href="#" 移除
+                  p
+                  .row
+                    .col-xs-6
+                      button.btn.btn-default data-dismiss="modal" 離開
+                    .col-xs-6
+                      button.btn.btn-success name="submit" type="submit" value="Upload" 確定
+
+        div id="newInputModal" class="modal fade" role="dialog"
+          .modal-dialog
+            .modal-content
+              .modal-header
+                h4 輸入關鍵字
+              .modal-body
+                form role="form" action="/accounts/#{@current_uid}/#{@folder[:course_id]}/#{@folder_type}/#{@folder[:folder_id]}/input/" enctype="multipart/form-data" method="post" id='confirmationForm'
+                  textarea#confirmationText.text cols="60" rows="10" form="confirmationForm" name="confirmationText" placeholder=("請依照以下格式：\n關鍵字1\n關鍵字2\n關鍵字3\n.\n.\n.\n")
+                  p
+                  .row
+                    .col-xs-6
+                      button.btn.btn-default data-dismiss="modal" 離開
+                    .col-xs-6
+                      button.btn.btn-success name="submit" type="submit" value="Upload" 確定

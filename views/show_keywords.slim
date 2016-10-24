@@ -1,0 +1,167 @@
+section
+  .container
+    .row
+      .col-lg-8.col-lg-offset-2.text-center
+        h2.section-heading 
+          == "#{@keyword["data"]}"
+        hr.primary
+        p
+        .panel.panel-primary
+          .panel-heading 製作完成的章節
+          .panel-body
+            table.table.table-striped.table-hover
+              thead
+                tr
+                  th 章節順序
+                  th 章節名稱
+                  th
+                  th
+              tbody
+                - @keyword_chid["content"].each_with_index.map do |chid, index|
+                  - @ordered_folder.each do |chapter|
+                    - if chapter[:chapter_id] == chid['chapter_id']
+                      tr
+                        td
+                          == chapter[:chapter_order]
+                        td
+                          == "#{chapter[:name]}"
+                        td
+                          button.btn.btn-success data-target="##{index}" data-toggle="modal"  data-backdrop="static" data-keyboard="false" type='submit' onclick="showkeywords(#{index}, #{chid['keyword']}, #{chid['chapter_id']})"
+                            i.fa.fa-plus aria-hidden="true"  顯示關鍵字雲
+
+                  div id="#{index}" class="modal fade" role="dialog"
+                    .modal-dialog.modal-lg
+                      .modal-content
+                        .modal-header
+                          button.close data-dismiss="modal" type="button" onclick="remove()"  &times;
+                          h4 顯示關鍵字雲
+                        .modal-body
+                          div id="tag_#{chid['chapter_id']}" 
+                          div id="tag_checkbox#{chid['chapter_id']}" style="height:150px;overflow:scroll;"
+                        .modal-footer 
+                          button#close.btn.btn-default data-dismiss="modal" type="button"  onclick="remove()" Close
+
+                  javascript:
+                    var fill = d3.scale.category20();
+                    var count = 0;
+                    var post_url = "";
+                    var keyword = [];
+                    var new_keyword = [];
+                    var now_chid = 0;
+                    function remove(){
+                      d3.select("svg").remove();
+                      location.reload();
+                      //alert("111");
+                    }
+                    function choice(my_form,count,post_url){
+                        post_url = "/keyword/#{@current_uid}/#{@course_id}/chapter/"+now_chid+"/postkeyword/";
+                        var listToDelete = [];
+                        var checkboxes = document.getElementsByName('check');
+                        for (var i=0, n=checkboxes.length;i<n;i++) {
+                            if (checkboxes[i].checked){
+                                listToDelete.push(checkboxes[i].value);
+                            }
+                        }
+                        var len = keyword.length;
+                        for(var k = 0; k < keyword.length; k++) {
+                            var obj = keyword[k];
+                            if(listToDelete.indexOf(obj.text) !== -1) {
+                                keyword[k] = {};
+                            }
+                        }
+                        d3.select("svg").remove();
+                        addTagCloud(keyword);
+                        for(var i =0;i<keyword.length;i++){
+                          if(keyword[i].text != null){
+                            var word_to_store = keyword[i].text;
+                            var size_to_store = keyword[i].size;
+                            new_keyword.push( {'text':word_to_store,'size':size_to_store});
+                          }
+                        }
+                        //---------post 新的keyword
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('POST', post_url, true);
+                        xhr.onload = function () {
+                            console.log(this.responseText);
+                        };
+                        xhr.send(JSON.stringify(listToDelete));
+                    }
+
+                    function showkeywords(index, obj, chid) {
+                        now_chid = chid;
+
+                        //console.log(obj)
+                        var order = [];
+                        keyword =[];
+                        count = 0;
+                        for(var objs in obj){
+                          count++;
+                          if(obj[objs]["order"]==null){
+                            //console.log("type 1");
+                            keyword.push({'text': objs, 'size': obj[objs]});
+                          }else{
+                            //console.log("type 2");
+                            keyword.push({'text': objs, 'size': obj[objs]["order"]*50});
+                          }
+                        }
+                        var checkboxes ="";
+                        checkboxes = "<FORM NAME=\"my_form\" METHOD=POST TARGET>";
+
+                        for(var i=0; i < count ; i++){
+                            checkboxes += "<input type = \"checkbox\" value  = \""+keyword[i]['text']+"\""+"NAME=\"check\""+"id = \""+i+"\">"+" "+keyword[i]['text']+"</input></br>";
+                        }
+                        checkboxes += "<INPUT TYPE=\"button\" VALUE=\"確認\" onClick=\"choice(this.form,count,post_url)\">";
+                        document.getElementById('tag_checkbox'+now_chid).innerHTML = checkboxes;
+
+                        addTagCloud(keyword,chid);
+                    };
+
+                    var addTagCloud = function (keyword,chid) {
+                      d3.layout.cloud().size([800, 350])
+                          .words(keyword)
+                          .rotate(function () { return ~~(Math.random() * 2) * 90; })
+                          .font('Impact')
+                          .fontSize(function (d) { return d.size; })
+                          .on('end', draw)
+                          .start();
+                    };
+
+                    function draw(words) {
+                     var tmp_chid = '#tag_'+now_chid;
+                      d3.select(tmp_chid).append('svg')
+                          .attr('width', 800)
+                          .attr('height', 350)
+                        .append('g')
+                          .attr('transform', 'translate(400,175)')
+                        .selectAll('text')
+                          .data(words)
+                        .enter().append('text')
+                          .style('font-size', function (d) { return d.size + 'px'; })
+                          .style('font-family', 'Impact')
+                          .style('fill', function (d, i) { return fill(i); })
+                          .attr('text-anchor', 'middle')
+                          .attr('transform', function (d) {
+                            return 'translate(' + [d.x, d.y] + ')rotate(' + d.rotate + ')';
+                          })
+                          .text(function (d) { return d.text; });
+                    }
+
+
+          .panel.panel-primary
+          .panel-heading 章節列表
+          .panel-body
+            table.table.table-striped.table-hover
+              thead
+                tr
+                  th 章節順序
+                  th 章節名稱
+                  th
+              tbody
+                - @ordered_folder.each do |chapter|
+                    tr
+                      td
+                        == chapter[:chapter_order]
+                      td
+                        == "#{chapter[:name]}"
+                      td
+                          a#make.btn.btn-danger href="/keyword/#{@current_uid}/#{@course_id}/chapter/#{chapter[:chapter_id]}/makekeyword" role="button" onclick="make()" 製作關鍵字雲

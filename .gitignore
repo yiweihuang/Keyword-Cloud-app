@@ -1,0 +1,5 @@
+config/config_env.rb
+.bundle/
+views/*.html
+*.codekit
+.DS_Store

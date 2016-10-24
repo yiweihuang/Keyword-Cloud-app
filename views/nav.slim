@@ -1,0 +1,38 @@
+nav#mainNav.navbar.navbar-default.navbar-fixed-top
+  .container-fluid
+    /! Brand and toggle get grouped for better mobile display
+    .navbar-header
+      button.navbar-toggle.collapsed data-target="#bs-example-navbar-collapse-1" data-toggle="collapse" type="button" 
+        span.sr-only Toggle navigation
+        | Menu
+        i.fa.fa-bars
+      a.navbar-brand.page-scroll href="/"  關鍵字雲服務平台
+    /! Collect the nav links, forms, and other content for toggling
+    #bs-example-navbar-collapse-1.collapse.navbar-collapse
+      ul.nav.navbar-nav
+        - if @current_uid
+            li
+              a href="/accounts/#{@current_uid}" 我的課程
+            - if @folder
+              li 
+                a href="/accounts/#{@current_uid}/#{@course_id}" 課程資料夾
+              - if @folder_id
+                li 
+                  a href="/accounts/#{@current_uid}/#{@course_id}/#{@folder[:folder_type]}" 章節資料夾
+      ul.nav.navbar-nav.navbar-right
+        - if @current_uid
+          li
+            a href='/logout' 登出
+        - else
+          li
+            a.page-scroll href="#about"  何謂關鍵字雲
+          li
+            a.page-scroll href="#services"  服務
+          li
+            a.page-scroll href="#portfolio"  下載說明書
+          li
+            a.page-scroll href="#contact"  聯絡我們
+          li
+            a href='/login' 登入
+    /! /.navbar-collapse
+  /! /.container-fluid

@@ -1,0 +1,15 @@
+section
+  .container
+    .row
+      .col-sm-1
+      .col-sm-4
+        h3.text-center 登入
+        form#form-login method='post' action='/login'
+          .form-group
+            label for='input-account' 帳號
+            input#input-account.form-control type='text' name='account'
+          .form-group
+            label for='input-password' 密碼
+            input#input-password.form-control type='password' name='password'
+          
+          button#button-login.btn.btn-primary.btn-block type='submit' value='login' 登入

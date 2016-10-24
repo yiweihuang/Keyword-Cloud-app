@@ -1,0 +1,42 @@
+section
+  .container
+    .row
+      .col-lg-8.col-lg-offset-2.text-center
+        h2.section-heading 
+          == "#{@course['data']}"
+        hr.primary
+        p
+        .panel.panel-primary
+          .panel-heading 資料夾類型
+          .panel-body
+            table.table.table-striped.table-hover
+              thead
+                tr
+                  th 類型
+                  th 資料夾
+              tbody
+                tr
+                  td 
+                    |關鍵字
+                  td
+                    form#form-create-concepts method='post' action='/accounts/#{@current_uid}/#{@cid}/concepts'
+                      button#button-create-concepts.btn.btn-success type='submit'
+                        i.fa.fa-plus aria-hidden="true"  資料夾
+                tr
+                  td
+                    |課程講義
+                  td
+                    form#form-create-slides method='post' action='/accounts/#{@current_uid}/#{@cid}/slides'
+                      button#button-create-slides.btn.btn-success type='submit'
+                        i.fa.fa-plus aria-hidden="true"  資料夾
+                tr
+                  td
+                    |課程字幕
+                  td
+                    form#form-create-subtitles method='post' action='/accounts/#{@current_uid}/#{@cid}/subtitles'
+                      button#button-create-subtitles.btn.btn-success type='submit'
+                        i.fa.fa-plus aria-hidden="true"  資料夾
+
+        form method='get' action='/keyword/#{@current_uid}/#{@cid}/chapter'
+          button.btn.btn-info.btn-lg.btn-block type='submit'
+            i.fa.fa-plus aria-hidden="true"  關鍵字雲

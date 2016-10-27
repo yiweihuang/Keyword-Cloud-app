@@ -24,7 +24,7 @@ class CreateFile
       end
     elsif description == 'text/plain'
       origin_data = document.read
-      data = document.read
+      data = origin_data
     elsif description == 'text/handwrite'
       origin_data = document
       data = document

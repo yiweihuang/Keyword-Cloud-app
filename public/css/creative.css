@@ -52,6 +52,14 @@ p {
 .text-faded {
   color: rgba(255, 255, 255, 0.7);
 }
+.header-title{
+  text-align:center;
+  background-color: #FFFDED;
+  font-size: 35px;
+  color: #F05F40;
+  font-weight: 700;
+  padding: 55px 0;
+}
 section {
   padding: 100px 0;
 }
@@ -81,7 +89,7 @@ aside {
 }
 .navbar-default .navbar-header .navbar-toggle {
   font-weight: 700;
-  font-size: 12px;
+  font-size: 16px;
   color: #222222;
   text-transform: uppercase;
 }
@@ -89,7 +97,7 @@ aside {
 .navbar-default .nav > li > a:focus {
   text-transform: uppercase;
   font-weight: 700;
-  font-size: 13px;
+  font-size: 16px;
   color: #222222;
 }
 .navbar-default .nav > li > a:hover,
@@ -131,7 +139,7 @@ aside {
   }
   .navbar-default.affix .navbar-header .navbar-brand {
     color: #F05F40;
-    font-size: 14px;
+    font-size: 15px;
   }
   .navbar-default.affix .navbar-header .navbar-brand:hover,
   .navbar-default.affix .navbar-header .navbar-brand:focus {

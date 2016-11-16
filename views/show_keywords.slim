@@ -90,18 +90,26 @@ section
                     function showkeywords(index, obj, chid) {
                         now_chid = chid;
 
-                        //console.log(obj)
                         var order = [];
                         keyword =[];
                         count = 0;
-                        for(var objs in obj){
-                          count++;
-                          if(obj[objs]["order"]==null){
-                            //console.log("type 1");
-                            keyword.push({'text': objs, 'size': obj[objs]*2});
-                          }else{
-                            //console.log("type 2");
-                            keyword.push({'text': objs, 'size': obj[objs]["order"]*50});
+                        if (#{@course_id} == 929){
+                          for(var objs in obj){
+                            count++;
+                            if(obj[objs]["order"]==null){
+                              keyword.push({'text': objs, 'size': obj[objs]*3});
+                            }else{
+                              keyword.push({'text': objs, 'size': obj[objs]["order"]*50});
+                            }
+                          }
+                        }else{
+                          for(var objs in obj){
+                            count++;
+                            if(obj[objs]["order"]==null){
+                              keyword.push({'text': objs, 'size': obj[objs]*2});
+                            }else{
+                              keyword.push({'text': objs, 'size': obj[objs]["order"]*50});
+                            }
                           }
                         }
                         var checkboxes ="";
@@ -117,13 +125,24 @@ section
                     };
 
                     var addTagCloud = function (keyword,chid) {
-                      d3.layout.cloud().size([700, 350])
-                          .words(keyword)
-                          .rotate(function () { return ~~(Math.random() * 2) * 90; })
-                          .font('Impact')
-                          .fontSize(function (d) { return d.size; })
-                          .on('end', draw)
-                          .start();
+                    // console.log()
+                      if (#{@course_id} == 929){
+                        d3.layout.cloud().size([600, 300])
+                            .words(keyword)
+                            .rotate(function () { return ~~(Math.random() * 2) * 0; })
+                            .font('Impact')
+                            .fontSize(function (d) { return d.size; })
+                            .on('end', draw)
+                            .start();
+                      }else{
+                        d3.layout.cloud().size([700, 350])
+                            .words(keyword)
+                            .rotate(function () { return ~~(Math.random() * 2) * 90; })
+                            .font('Impact')
+                            .fontSize(function (d) { return d.size; })
+                            .on('end', draw)
+                            .start();
+                      }
                     };
 
                     function draw(words) {

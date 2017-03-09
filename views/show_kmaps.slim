@@ -1,0 +1,100 @@
+section
+  .container
+    .row
+      .col-lg-8.col-lg-offset-2.text-center
+        h2.section-heading 
+          == "#{@kmap["data"]}"
+        hr.primary
+        p
+        form method='get' action='/kmap/#{@current_uid}/#{@course_id}/makekmap'
+          button.btn.btn-danger.btn-lg.btn-block type='submit'
+            i.fa.fa-repeat aria-hidden="true"  如有新增講義請按
+        p
+        .panel.panel-primary
+          .panel-heading 有知識地圖的章節
+          .panel-body
+            table.table.table-striped.table-hover
+              thead
+                tr
+                  th 章節順序
+                  th 章節名稱
+                  th
+                  th
+              tbody
+                - @kmap_chid["content"].each_with_index.map do |chid, index|
+                  - @ordered_folder.each do |chapter|
+                    - if chapter[:chapter_id] == chid['chapter_id']
+                      tr
+                        td
+                          == chapter[:chapter_order]
+                        td
+                          == "#{chapter[:name]}"
+                        td
+                          button.btn.btn-success data-target="##{index}" data-toggle="modal" data-backdrop="static" data-keyboard="false" type='submit' onclick="showtfidf(#{index}, #{chid['kmap']}, #{chid['chapter_id']})"
+                            i.fa.fa-plus aria-hidden="true"  顯示知識地圖
+
+                  div id="#{index}" class="modal fade" role="dialog"
+                    .modal-dialog.modal-lg
+                      .modal-content
+                        .modal-header
+                          button.close data-dismiss="modal" type="button" onclick="remove()"  &times;
+                          h4 顯示
+                        .modal-body
+                          input id="slider_#{index}" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14"
+                          div id="tag_checkbox#{chid['chapter_id']}" style="height:150px;overflow:scroll;"
+                        .modal-footer 
+                          button#close.btn.btn-default data-dismiss="modal" type="button"  onclick="remove()" Close
+                  
+                  css:
+                    #ex1Slider .slider-selection {
+                        background: #BABABA;
+                    }
+                  javascript:
+                    var fill = d3.scale.category20();
+                    var count = 0;
+                    var post_url = "";
+                    var keyword = [];
+                    var new_keyword = [];
+                    var now_chid = 0;
+                  
+                    function remove(){
+                      location.reload();
+                    }
+                  
+                    function showtfidf(index, obj, chid) {
+                        var x = $('#slider_'+index).slider();
+                        x.on('slideStop', function(val) {
+                          $.ajax({
+                              url: "/kmap/" + #{@current_uid} + "/" + #{@course_id} + "/" + chid + "/" + val['value'] + "/show",
+                              type: "GET",
+                              dataType: "json",
+                              success: function(response) {
+                                //console.log(response['kmap']['top_tfidf']);
+                                now_chid = chid;
+                                keyword =[];
+                                count = 0;
+                                obj = response['kmap']['top_tfidf'];
+                                for(var objs in obj){
+                                  count++;
+                                  keyword.push({'text': objs, 'size': obj[objs]});
+                                }
+                                var checkboxes ="";
+                                checkboxes = "<FORM NAME=\"my_form\" METHOD=POST TARGET>";
+
+                                for(var i=0; i < count ; i++){
+                                    checkboxes += "<input type = \"checkbox\" value  = \""+keyword[i]['text']+"\""+"NAME=\"check\""+"id = \""+i+"\">"+" "+keyword[i]['text']+"</input></br>";
+                                }
+                                checkboxes += "<INPUT TYPE=\"button\" VALUE=\"確認\" onClick=\"choice(this.form,count,post_url)\">";
+                                document.getElementById('tag_checkbox'+now_chid).innerHTML = checkboxes;
+
+                              },
+
+                              error: function(response) {
+                                console.log(response);
+                                alert("ERROR!!!");
+                              },
+                            });
+
+                        });
+                
+                    };

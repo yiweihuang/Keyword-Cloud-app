@@ -40,7 +40,7 @@ section
                           button.close data-dismiss="modal" type="button" onclick="remove()"  &times;
                           h4 顯示
                         .modal-body
-                          input id="slider_#{index}" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="20" data-slider-step="1" data-slider-value="14"
+                          input id="slider_#{index}" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="#{chid['range']}" data-slider-step="1" data-slider-value="10"
                           div id="tag_checkbox#{chid['chapter_id']}" style="height:150px;overflow:scroll;"
                         .modal-footer 
                           button#close.btn.btn-default data-dismiss="modal" type="button"  onclick="remove()" Close
@@ -69,7 +69,6 @@ section
                               type: "GET",
                               dataType: "json",
                               success: function(response) {
-                                //console.log(response['kmap']['top_tfidf']);
                                 now_chid = chid;
                                 keyword =[];
                                 count = 0;

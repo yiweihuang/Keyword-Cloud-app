@@ -16,8 +16,8 @@ class KeywordCloudApp < Sinatra::Base
                                      course_id: params[:course_id])
 
       @kmap_chid = HasKmapChap.call(current_uid: @current_uid,
-                                          auth_token: session[:auth_token],
-                                          course_id: @course_id)
+                                    auth_token: session[:auth_token],
+                                    course_id: @course_id)
       @ordered_folder = @folder.sort_by { |chapter| chapter[:chapter_order] }
       slim(:show_kmaps)
     else

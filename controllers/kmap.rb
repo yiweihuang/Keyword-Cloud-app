@@ -75,5 +75,19 @@ class KeywordCloudApp < Sinatra::Base
       halt 404
     end
   end
-
+  post '/kmap/:uid/:course_id/chapter/:chapter_id/postkmap' do
+    if @current_uid && @current_uid.to_s == params[:uid]
+      @auth_token = session[:auth_token]
+      @cid = params[:course_id]
+      @chid = params[:chapter_id]
+      delete_kmap_arr = JSON.parse(request.body.read)
+      CreateFinalKmap.call(current_uid: @current_uid,
+                           auth_token: @auth_token,
+                           course_id: @cid,
+                           chapter_id: @chid,
+                           delete_kmap: delete_kmap_arr)
+    else
+      slim(:login)
+    end
+  end
 end

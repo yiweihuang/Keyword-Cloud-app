@@ -40,9 +40,19 @@ section
                           button.close data-dismiss="modal" type="button" onclick="remove()"  &times;
                           h4 顯示
                         .modal-body
-                          input id="slider_#{index}" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="#{chid['range']}" data-slider-step="1" data-slider-value="10"
-                          div id="tag_checkbox#{chid['chapter_id']}" style="height:150px;overflow:scroll;"
+                          .container-fluid
+                            div.row
+                              h2.col-md-6 style="float:left;" Title
+                              h2.col-md-6 style="float:left;" TFIDF
+                            div.row
+                              div.col-md-4 id="tag_checkbox#{chid['chapter_id']}" align="left" style="height:300px;width:400px;overflow:scroll;float:left;" 
+                              div.col-md-4 id="tag_checkbox_#{chid['chapter_id']}" align="left" style="height:300px;width:400px;overflow:scroll;float:left;"
+                            div.row
+                              input.col-md-4.col-md-offset-4 id="slider_#{index}" data-slider-id='ex1Slider' type="text" data-slider-min="0" data-slider-max="#{chid['range']}" data-slider-step="1" data-slider-value="10"
+                            div.row
+                              button#close.btn.btn-danger.btn-md type="button"  onclick="choice(count,post_url)" 確認
                         .modal-footer 
+                          button#close.btn.btn-danger type="button"  onclick="kpoint()" Next
                           button#close.btn.btn-default data-dismiss="modal" type="button"  onclick="remove()" Close
                   
                   css:
@@ -60,6 +70,35 @@ section
                     function remove(){
                       location.reload();
                     }
+                    
+                    function choice(count, post_url){
+                        post_url = "/kmap/#{@current_uid}/#{@course_id}/chapter/"+now_chid+"/postkmap";
+                        var listToDelete = [];
+                        var checkboxes1 = document.getElementsByName('check1');
+                        var checkboxes2 = document.getElementsByName('check2');
+                        for (var i=0, n=checkboxes1.length;i<n;i++) {
+                            if (checkboxes1[i].checked){
+                                listToDelete.push(checkboxes1[i].value);
+                            }
+                        }
+                        for (var i=0, n=checkboxes2.length;i<n;i++) {
+                            if (checkboxes2[i].checked){
+                                listToDelete.push(checkboxes2[i].value);
+                            }
+                        }
+                        
+                        //---------post 新的keyword
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('POST', post_url, true);
+                        xhr.onload = function () {
+                            console.log(this.responseText);
+                        };
+                        xhr.send(JSON.stringify(listToDelete));
+                    }
+                    
+                    function kpoint(){
+                      console.log('next step');
+                    }
                   
                     function showtfidf(index, obj, chid) {
                         var x = $('#slider_'+index).slider();
@@ -71,21 +110,38 @@ section
                               success: function(response) {
                                 now_chid = chid;
                                 keyword =[];
+                                keyword_test =[];
                                 count = 0;
+                                count_test = 0;
                                 obj = response['kmap']['top_tfidf'];
                                 for(var objs in obj){
-                                  count++;
-                                  keyword.push({'text': objs, 'size': obj[objs]});
+                                  if(obj[objs] == 'title'){
+                                    count++;
+                                    keyword.push({'text': objs, 'size': obj[objs]});
+                                  }
+                                  else{
+                                    count_test++;
+                                    keyword_test.push({'text': objs, 'size': obj[objs]});
+                                  }
                                 }
+                                
+                                var checkboxes1 ="";
+                                var checkboxes2 ="";
                                 var checkboxes ="";
-                                checkboxes = "<FORM NAME=\"my_form\" METHOD=POST TARGET>";
+                                checkboxes1 = "<FORM NAME=\"my_form1\" METHOD=POST TARGET>";
+                                checkboxes2 = "<FORM NAME=\"my_form2\" METHOD=POST TARGET>";
 
                                 for(var i=0; i < count ; i++){
-                                    checkboxes += "<input type = \"checkbox\" value  = \""+keyword[i]['text']+"\""+"NAME=\"check\""+"id = \""+i+"\">"+" "+keyword[i]['text']+"</input></br>";
+                                    checkboxes1 += "<input type = \"checkbox\" value  = \""+keyword[i]['text']+"\""+"NAME=\"check1\""+"id = \""+i+"\">"+" "+keyword[i]['text']+"</input></br>";
                                 }
-                                checkboxes += "<INPUT TYPE=\"button\" VALUE=\"確認\" onClick=\"choice(this.form,count,post_url)\">";
-                                document.getElementById('tag_checkbox'+now_chid).innerHTML = checkboxes;
-
+                                for(var i=0; i < count_test ; i++){
+                                    checkboxes2 += "<input type = \"checkbox\" value  = \""+keyword_test[i]['text']+"\""+"NAME=\"check2\""+"id = \""+i+"\">"+" "+keyword_test[i]['text']+"\("+keyword_test[i]['size']/100+"\)</input></br>";
+                                }
+                                //checkboxes2 += "<INPUT TYPE=\"button\" VALUE=\"確認\" onClick=\"choice(count,post_url)\">";
+                                document.getElementById('tag_checkbox'+now_chid).innerHTML = checkboxes1;
+                                document.getElementById('tag_checkbox_'+now_chid).innerHTML = checkboxes2;
+                                
+                                
                               },
 
                               error: function(response) {
@@ -93,7 +149,27 @@ section
                                 alert("ERROR!!!");
                               },
                             });
-
                         });
-                
+                      now_chid = chid;
+                      keyword =[];
+                      count = 0;
+                      
+                      for(var objs in obj){
+                        count++;
+                        if(obj[objs]["order"]==null){
+                          keyword.push({'text': objs, 'size': obj[objs]*2});
+                        }else{
+                          keyword.push({'text': objs, 'size': obj[objs]["order"]*50});
+                        }
+                      }
+                      
+                      var checkboxes ="";
+                      checkboxes = "<FORM NAME=\"my_form\" METHOD=POST TARGET>";
+
+                      for(var i=0; i < count ; i++){
+                          checkboxes += "<input type = \"checkbox\" value  = \""+keyword[i]['text']+"\""+"NAME=\"check\""+"id = \""+i+"\">"+" "+keyword[i]['text']+"</input></br>";
+                      }
+                      checkboxes += "<INPUT TYPE=\"button\" VALUE=\"確認\">";
+                      document.getElementById('tag_checkbox'+now_chid).innerHTML = checkboxes;
+
                     };

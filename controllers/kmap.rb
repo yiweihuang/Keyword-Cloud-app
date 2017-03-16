@@ -55,10 +55,6 @@ class KeywordCloudApp < Sinatra::Base
         @course_id = params[:course_id]
         @chapter_id = params[:chapter_id]
         @number = params[:number]
-        # @folder = GetOwnedFolder.call(current_uid: @current_uid,
-        #                               auth_token: session[:auth_token],
-        #                               course_id: @course_id,
-        #                               folder_type: 'slides')
 
         @kmap = GetTfidf.call(current_uid: @current_uid,
                               auth_token: @auth_token,
@@ -88,6 +84,24 @@ class KeywordCloudApp < Sinatra::Base
                            delete_kmap: delete_kmap_arr)
     else
       slim(:login)
+    end
+  end
+  get '/kmap/:uid/:course_id/:chapter_id/show/kmap' do
+    if @current_uid && @current_uid.to_s == params[:uid]
+      @auth_token = session[:auth_token]
+      @course_id = params[:course_id]
+      @chapter_id = params[:chapter_id]
+
+      @url = CreateKmapPict.call(current_uid: @current_uid,
+                                 auth_token: session[:auth_token],
+                                 course_id: @course_id,
+                                 chapter_id: @chapter_id)
+
+     JSON.pretty_generate(course_id: @course_id,
+                          chapter_id: @chapter_id,
+                          url: @url)
+    else
+      slim(:home)
     end
   end
 end

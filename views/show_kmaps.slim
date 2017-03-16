@@ -114,6 +114,14 @@ section
                         },
                       });
                     }
+                    
+                    function compare(a, b) {
+                        if (a.size < b.size)
+                            return 1;
+                        if (a.size > b.size)
+                            return -1;
+                        return 0;
+                    }
                   
                     function showtfidf(index, obj, chid) {
                         var x = $('#slider_'+index).slider();
@@ -123,6 +131,14 @@ section
                               type: "GET",
                               dataType: "json",
                               success: function(response) {
+                              function compare(a, b) {
+                                  if (parseFloat(a.size) < parseFloat(b.size))
+                                      return 1;
+                                  if (parseFloat(a.size) > parseFloat(b.size))
+                                      return -1;
+                                  return 0;
+                              }
+                                
                                 now_chid = chid;
                                 keyword =[];
                                 keyword_test =[];
@@ -139,7 +155,10 @@ section
                                     keyword_test.push({'text': objs, 'size': obj[objs]});
                                   }
                                 }
-                                
+                                keyword_test.sort(compare);
+                                for(var i=0; i < count_test ; i++){ 
+                                  console.log(keyword_test[i])
+                                }
                                 var checkboxes1 ="";
                                 var checkboxes2 ="";
                                 var checkboxes ="";

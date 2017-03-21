@@ -61,6 +61,9 @@ section
                     #ex1Slider .slider-selection {
                         background: #BABABA;
                     }
+                    input[type=checkbox]:checked + label.strikethrough{
+                      text-decoration: line-through;
+                    }
                   javascript:
                     var fill = d3.scale.category20();
                     var count = 0;
@@ -166,16 +169,14 @@ section
                                 checkboxes2 = "<FORM NAME=\"my_form2\" METHOD=POST TARGET>";
 
                                 for(var i=0; i < count ; i++){
-                                    checkboxes1 += "<input type = \"checkbox\" value  = \""+keyword[i]['text']+"\""+"NAME=\"check1\""+"id = \""+i+"\">"+" "+keyword[i]['text']+"</input></br>";
+                                    checkboxes1 += "<input type = \"checkbox\" value  = \""+keyword[i]['text']+"\""+"NAME=\"check1\""+"id = \""+i+"\">"+"</input>"+ " " +"<label class  = \"strikethrough\">"+ " " +keyword[i]['text']+"</label></br>";
                                 }
                                 for(var i=0; i < count_test ; i++){
-                                    checkboxes2 += "<input type = \"checkbox\" value  = \""+keyword_test[i]['text']+"\""+"NAME=\"check2\""+"id = \""+i+"\">"+" "+keyword_test[i]['text']+"\("+keyword_test[i]['size']/100+"\)</input></br>";
+                                    checkboxes2 += "<input type = \"checkbox\" value  = \""+keyword_test[i]['text']+"\""+"NAME=\"check2\""+"id = \""+i+"\">"+"</input>"+ " " +"<label class  = \"strikethrough\">" + " " +keyword_test[i]['text']+"\("+keyword_test[i]['size']/100+"\)</label></br>";
                                 }
                                 //checkboxes2 += "<INPUT TYPE=\"button\" VALUE=\"確認\" onClick=\"choice(count,post_url)\">";
                                 document.getElementById('tag_checkbox'+now_chid).innerHTML = checkboxes1;
                                 document.getElementById('tag_checkbox_'+now_chid).innerHTML = checkboxes2;
-                                
-                                
                               },
 
                               error: function(response) {
@@ -201,7 +202,7 @@ section
                       checkboxes = "<FORM NAME=\"my_form\" METHOD=POST TARGET>";
 
                       for(var i=0; i < count ; i++){
-                          checkboxes += "<input type = \"checkbox\" value  = \""+keyword[i]['text']+"\""+"NAME=\"check\""+"id = \""+i+"\">"+" "+keyword[i]['text']+"</input></br>";
+                          checkboxes += "<input type = \"checkbox\" value  = \""+keyword[i]['text']+"\""+"NAME=\"check\""+"id = \""+i+"\">"+"</input>"+ " " +"<label class  = \"strikethrough\">" + " " +keyword[i]['text']+"</label></br>";
                       }
                       checkboxes += "<INPUT TYPE=\"button\" VALUE=\"確認\">";
                       document.getElementById('tag_checkbox'+now_chid).innerHTML = checkboxes;

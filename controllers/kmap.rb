@@ -19,6 +19,7 @@ class KeywordCloudApp < Sinatra::Base
                                     auth_token: session[:auth_token],
                                     course_id: @course_id)
       @ordered_folder = @folder.sort_by { |chapter| chapter[:chapter_order] }
+      puts @ordered_folder
       slim(:show_kmaps)
     else
       slim(:home)

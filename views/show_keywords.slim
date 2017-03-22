@@ -19,15 +19,14 @@ section
               tbody
                 - @keyword_chid["content"].each_with_index.map do |chid, index|
                   - @ordered_folder.each do |chapter|
-                    - if chapter[:chapter_id] == chid['chapter_id']
-                      tr
-                        td
-                          == chapter[:chapter_order]
-                        td
-                          == "#{chapter[:name]}"
-                        td
-                          button.btn.btn-success data-target="##{index}" data-toggle="modal"  data-backdrop="static" data-keyboard="false" type='submit' onclick="showkeywords(#{index}, #{chid['keyword']}, #{chid['chapter_id']})"
-                            i.fa.fa-plus aria-hidden="true"  顯示關鍵字雲
+                    tr
+                      td
+                        == chapter[:chapter_order]
+                      td
+                        == "#{chapter[:name]}"
+                      td
+                        button.btn.btn-success data-target="##{index}" data-toggle="modal"  data-backdrop="static" data-keyboard="false" type='submit' onclick="showkeywords(#{index}, #{chid['keyword']}, #{chid['chapter_id']})"
+                          i.fa.fa-plus aria-hidden="true"  顯示關鍵字雲
 
                   div id="#{index}" class="modal fade" role="dialog"
                     .modal-dialog.modal-lg

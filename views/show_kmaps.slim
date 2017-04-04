@@ -172,7 +172,7 @@ section
                                     checkboxes1 += "<input type = \"checkbox\" value  = \""+keyword[i]['text']+"\""+"NAME=\"check1\""+"id = \""+i+"\">"+"</input>"+ " " +"<label class  = \"strikethrough\">"+ " " +keyword[i]['text']+"</label></br>";
                                 }
                                 for(var i=0; i < count_test ; i++){
-                                    checkboxes2 += "<input type = \"checkbox\" value  = \""+keyword_test[i]['text']+"\""+"NAME=\"check2\""+"id = \""+i+"\">"+"</input>"+ " " +"<label class  = \"strikethrough\">" + " " +keyword_test[i]['text']+"\("+keyword_test[i]['size']/100+"\)</label></br>";
+                                    checkboxes2 += "<input type = \"checkbox\" value  = \""+keyword_test[i]['text']+"\""+"NAME=\"check2\""+"id = \""+i+"\">"+"</input>"+ " " +"<label class  = \"strikethrough\">" + " " +keyword_test[i]['text']+"\("+keyword_test[i]['size']+"\)</label></br>";
                                 }
                                 //checkboxes2 += "<INPUT TYPE=\"button\" VALUE=\"確認\" onClick=\"choice(count,post_url)\">";
                                 document.getElementById('tag_checkbox'+now_chid).innerHTML = checkboxes1;

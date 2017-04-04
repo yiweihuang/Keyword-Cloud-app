@@ -23,7 +23,7 @@ section
               tbody
                 - @kmap_chid["content"].each_with_index.map do |chid, index|
                   - @ordered_folder.each do |chapter|
-                    - if chapter[:chapter_order] == index + 1
+                    - if chapter[:chapter_id] == chid['chapter_id']
                       tr
                         td
                           == chapter[:chapter_order]

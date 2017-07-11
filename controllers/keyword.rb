@@ -51,7 +51,7 @@ class KeywordCloudApp < Sinatra::Base
       slim(:home)
     end
   end
-  
+
   post '/keyword/:uid/:course_id/chapter/:chapter_id/postkeyword/' do
     if @current_uid && @current_uid.to_s == params[:uid]
       @auth_token = session[:auth_token]
